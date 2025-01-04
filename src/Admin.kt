@@ -41,6 +41,7 @@ class Admin(username:String,password:String):Akun(username, password) {
             if (jmlh != 0 && ketersediaan == 1) {
                 val sql = "UPDATE jenis SET ketersediaan = '0' WHERE nama_jenis='$nama_jenis'"
                 stmt?.executeUpdate(sql)
+                println("Jenis berhasil dihapus")
             } else {
                 println("Jenis tidak ada")
             }
@@ -59,22 +60,7 @@ class Admin(username:String,password:String):Akun(username, password) {
         val jenis = readLine()!!
         try {
             val sql = "SELECT id_jenis FROM jenis WHERE nama_jenis='$jenis' AND ketersediaan='1'"
-            var id_barang: Int = 0
-            try {
-                val sql2 = "SELECT MAX(id_barang) from barang"
-                rs = stmt?.executeQuery(sql2)
 
-                while (rs!!.next()) {
-                    id_barang = rs!!.getInt(1)
-                }
-                if (id_barang == 0) {
-                    id_barang = 1
-                } else {
-                    id_barang += 1
-                }
-            }catch (e: Exception) {
-                println(e.printStackTrace())
-            }
             rs = stmt?.executeQuery(sql)
             var id_jenis: Int = 0
             while (rs!!.next()) {
@@ -83,8 +69,12 @@ class Admin(username:String,password:String):Akun(username, password) {
             if (id_jenis != 0) {
                 val sql =
                     "INSERT INTO barang (nama_barang, id_jenis, stok) VALUES ('$nama_barang','$id_jenis','$stok_barang')"
-                log.tambahLog(id_akun,id_barang,"Tambah barang dengan nama $nama_barang dengan stok $stok_barang")
+                val sql2 =
+                    "SELECT id_barang FROM barang WHERE nama_barang='$nama_barang'"
                 stmt?.executeUpdate(sql)
+                rs = stmt?.executeQuery(sql2)
+                log.tambahLog(id_akun,nama_barang,"Tambah barang dengan nama $nama_barang dengan stok $stok_barang")
+
             } else {
                 println("Jenis tidak ditemukan")
             }
@@ -94,7 +84,7 @@ class Admin(username:String,password:String):Akun(username, password) {
     }
 
     fun delBarang() {
-        println("Masukkan nama barang : ")
+        print("Masukkan nama barang : ")
         val nama_barang = readLine()!!
         try {
             val sql = "SELECT id_barang FROM barang WHERE nama_barang='$nama_barang'"
@@ -105,8 +95,9 @@ class Admin(username:String,password:String):Akun(username, password) {
             }
             if (id_barang != 0) {
                 val sql = "DELETE FROM barang WHERE id_barang='$id_barang'"
-                log.tambahLog(id_akun,id_barang,"Hapus barang dengan nama $nama_barang")
                 stmt?.executeUpdate(sql)
+                log.tambahLog(id_akun,nama_barang,"Hapus barang dengan nama $nama_barang")
+                println("Barang berhasil dihapus")
             } else {
                 println("Barang tidak ditemukan")
             }
@@ -116,7 +107,7 @@ class Admin(username:String,password:String):Akun(username, password) {
     }
 
     fun upBarang() {
-        println("Masukkan nama barang : ")
+        print("Masukkan nama barang : ")
         val nama_barang = readLine()!!
         try {
             val sql = "SELECT id_barang,stok FROM barang WHERE nama_barang='$nama_barang'"
@@ -138,8 +129,9 @@ class Admin(username:String,password:String):Akun(username, password) {
                         print("Masukkan nama baru: ")
                         val nama_baru = readLine()!!
                         val updateSql = "UPDATE barang SET nama_barang='$nama_baru' WHERE id_barang='$id_barang'"
-                        log.tambahLog(id_akun,id_barang,"Update barang dengan nama $nama_barang menjadi $nama_baru")
                         stmt?.executeUpdate(updateSql)
+                        log.tambahLog(id_akun,nama_barang,"Update barang dengan nama $nama_barang menjadi $nama_baru")
+
                         println("Nama barang berhasil diupdate")
                     }
 
@@ -147,8 +139,9 @@ class Admin(username:String,password:String):Akun(username, password) {
                         print("Masukkan stok baru: ")
                         val stok_baru = readLine()!!
                         val updateSql = "UPDATE barang SET stok='$stok_baru' WHERE id_barang='$id_barang'"
-                        log.tambahLog(id_akun,id_barang,"Update stok barang dengan nama $nama_barang dari $stok menjadi $stok_baru")
                         stmt?.executeUpdate(updateSql)
+                        log.tambahLog(super.id_akun,nama_barang,"Update stok barang dengan nama $nama_barang dari $stok menjadi $stok_baru")
+
                         println("Stok barang berhasil diupdate")
                     }
 
@@ -175,7 +168,7 @@ class Admin(username:String,password:String):Akun(username, password) {
                 val namaBarang = rs!!.getString("nama_barang")
                 val stok = rs!!.getInt("stok")
                 val jenisBarang = rs!!.getString("nama_jenis")
-                println("$namaBarang\t\t$stok\t\t$jenisBarang")
+                println("$namaBarang\t\t\t$stok\t\t\t$jenisBarang")
             }
             println("----------------------------------------")
 

@@ -56,7 +56,7 @@ open class Akun(val username:String, val password:String) {
     }
 
     fun tambahAkun() {
-    if (rs?.getString("role") == "admin") {
+    if (role == "admin") {
         println("Masukkan username dan password baru : ")
         print("Username : ")
         val username = readLine()!!
