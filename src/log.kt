@@ -20,81 +20,71 @@ class log() {
         stmt = conn?.createStatement()
     }
 
-    fun tambahLog(idAkun: Int, idBarang: Int, keterangan: String) {
+    fun tambahLog(idAkun: Int, namaBarang: String, keterangan: String) {
         val currentDateTime = LocalDateTime.now()
         val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
         val tanggal = currentDateTime.format(formatter)
 
-        val sql = """
-            INSERT INTO log (id_akun, id_barang, keterangan, tanggal) 
-            VALUES ($idAkun, $idBarang, '$keterangan', '$tanggal')
-        """.trimIndent()
-
-        stmt?.executeUpdate(sql)
+        val sql = "INSERT INTO log (id_akun, nama_barang, keterangan, tanggal) VALUES ('$idAkun', '$namaBarang', '$keterangan', '$tanggal')"
+        stmt?.execute(sql)
     }
 
     fun tampilkanLog() {
-        val sql = "SELECT l.*, a.username, m.nama_barang FROM log l " +
+        val sql = "SELECT l.*, a.username, nama_barang FROM log l " +
                 "JOIN akun a ON l.id_akun = a.id_akun " +
-                "JOIN barang m ON l.id_barang = m.id_barang " +
                 "ORDER BY l.tanggal DESC"
 
         rs = stmt?.executeQuery(sql)
 
         println("\n=== RIWAYAT AKTIVITAS ===")
-        println("ID\tUsername\tBarang\t\tKeterangan\t\tTanggal")
-        println("================================================================")
+        println("Tanggal\t\t\t\t\tUsername\t\tBarang\t\t\t\t\tKeterangan")
+        println("===========================================================================================================================")
 
         while (rs?.next() == true) {
-            val idLog = rs?.getInt("id_log")
             val username = rs?.getString("username")
             val barang = rs?.getString("nama_barang")
             val keterangan = rs?.getString("keterangan")
             val tanggal = rs?.getString("tanggal")
 
-            println("$idLog\t$username\t$barang\t\t$keterangan\t\t$tanggal")
+            println("$tanggal\t\t$username\t\t\t$barang\t\t\t\t\t$keterangan")
         }
     }
 
     fun cariLogByID(idAkun: Int) {
-        val sql = "SELECT l.*, a.username, m.nama_barang FROM log l " +
+        val sql = "SELECT l.*, a.username, nama_barang FROM log l " +
                 "JOIN akun a ON l.id_akun = a.id_akun " +
-                "JOIN barang m ON l.id_barang = m.id_barang " +
                 "WHERE a.id_akun = '$idAkun' " +
                 "ORDER BY l.tanggal DESC"
 
         rs = stmt?.executeQuery(sql)
 
         println("\n=== RIWAYAT AKTIVITAS $idAkun ===")
-        println("ID\tBarang\t\tKeterangan\t\tTanggal")
-        println("================================================================")
+        println("Tanggal\t\t\t\t\tBarang\t\t\tKeterangan")
+        println("=============================================================================================================")
 
         while (rs?.next() == true) {
-            val idLog = rs?.getInt("id_log")
             val barang = rs?.getString("nama_barang")
             val keterangan = rs?.getString("keterangan")
             val tanggal = rs?.getString("tanggal")
 
-            println("$idLog\t$barang\t\t$keterangan\t\t$tanggal")
+            println("$tanggal\t\t$barang\t\t\t$keterangan")
         }
     }
 
     fun cariLogByUsername(username: String) {
-        val sql = "SELECT l.*, a.username, m.nama_barang FROM log l " +
+        val sql = "SELECT l.*, a.username, nama_barang FROM log l " +
                 "JOIN akun a ON l.id_akun = a.id_akun " +
-                "JOIN barang m ON l.id_barang = m.id_barang " +
                 "WHERE a.username = '$username' " +
                 "ORDER BY l.tanggal DESC"
         rs = stmt?.executeQuery(sql)
         println("\n=== RIWAYAT AKTIVITAS $username ===")
-        println("ID\tBarang\t\tKeterangan\t\tTanggal")
-        println("================================================================")
+        println("Tanggal\t\t\t\t\t\tBarang\t\t\t\tKeterangan")
+        println("==============================================================================================================================")
         while (rs?.next() == true) {
-            val idLog = rs?.getInt("id_log")
             val barang = rs?.getString("nama_barang")
             val keterangan = rs?.getString("keterangan")
             val tanggal = rs?.getString("tanggal")
-            println("$idLog\t$barang\t\t$keterangan\t\t$tanggal")
+            println("$tanggal\t\t\t$barang\t\t\t\t$keterangan")
         }
     }
 }

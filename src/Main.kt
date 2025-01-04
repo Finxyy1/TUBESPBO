@@ -65,9 +65,12 @@ fun loginValidation(){
         status = "login"
         if (akun.role == "admin") {
             admin = Admin(userName, password)
+            admin.id_akun = akun.id_akun
+            admin.role = akun.role
             showAdminMenu(admin)
         } else {
             user = User(userName, password)
+            user.id_akun = akun.id_akun
             showUserMenu(user)
         }
     }
@@ -212,13 +215,9 @@ fun showUserMenu(user: User) {
 
                 when (readLine()) {
                     "1" -> {
-                        print("Masukkan nama barang: ")
-                        val nama = readLine()!!
                         user.cariBarangByNama()
                     }
                     "2" -> {
-                        print("Masukkan jenis barang: ")
-                        val jenis = readLine()!!
                         user.cariBarangByJenis()
                     }
                     "3" -> continue
