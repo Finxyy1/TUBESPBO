@@ -1,4 +1,5 @@
 class Admin(username:String,password:String):Akun(username, password) {
+    // halo
     fun tambahJenis() {
         try {
             print("Masukkan nama jenis : ")
