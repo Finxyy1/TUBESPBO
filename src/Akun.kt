@@ -25,17 +25,16 @@ open class Akun(val username:String, val password:String) {
 
         val sql = "SELECT * FROM akun WHERE username='$username' AND password='$password'"
         rsAkun = stmt?.executeQuery(sql)
-
         log = log()
     }
 
     fun login(): Boolean {
-        if (rsAkun?.next() == null) {
+        if (rsAkun?.next() == null) {//Cek apakah akun ada atau tidak
             return false
         } else {
             try {
-                id_akun = rsAkun!!.getInt("id_akun")
-                role = rsAkun!!.getString("role")
+                id_akun = rsAkun!!.getInt("id_akun")//Mengambil id akun
+                role = rsAkun!!.getString("role")//Mengambil role
                 return true
             } catch (e: Exception) {
                 println("Akun tidak ditemukan")
@@ -85,9 +84,9 @@ open class Akun(val username:String, val password:String) {
 
                     val checkSql = "SELECT COUNT(*) FROM akun WHERE username='$username'"
                     rs = stmt?.executeQuery(checkSql)
-                    var exists = 0
+                    var exists = 0//variabel untuk mengecek apakah username ada atau tidak
                     while (rs!!.next()) {
-                        exists = rs!!.getInt(1)
+                        exists = rs!!.getInt(1)//mengambil nilai dari kolom pertama dan disimpan ke variabel exists
                     }
                     if (exists > 0) {
                         val sql = "DELETE FROM akun WHERE username='$username'"
