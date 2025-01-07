@@ -4,6 +4,12 @@ class Admin(username:String,password:String):Akun(username, password) {
         try {
             print("Masukkan nama jenis : ")
             val nama_jenis = readLine()!!
+
+            if (nama_jenis.isEmpty()) {
+                println("Data tidak boleh kosong")
+                return
+            }
+
             val sql = "SELECT COUNT(id_jenis),ketersediaan FROM jenis WHERE nama_jenis='$nama_jenis'"
             rs = stmt?.executeQuery(sql)
             var jmlh: Int = 0
@@ -31,6 +37,12 @@ class Admin(username:String,password:String):Akun(username, password) {
         try {
             print("Masukkan nama jenis : ")
             val nama_jenis = readLine()!!
+
+            if (nama_jenis.isEmpty()) {
+                println("Data tidak boleh kosong")
+                return
+            }
+
             val sql = "SELECT COUNT(id_jenis),ketersediaan FROM jenis WHERE nama_jenis='$nama_jenis'"
             rs = stmt?.executeQuery(sql)
             var jmlh: Int = 0
@@ -59,6 +71,11 @@ class Admin(username:String,password:String):Akun(username, password) {
         val stok_barang = readLine()!!
         print("Jenis barang : ")
         val jenis = readLine()!!
+
+        if (nama_barang.isEmpty() && stok_barang.isEmpty() && jenis.isEmpty()) {
+            println("Data tidak boleh kosong")
+            return
+        }
         try {
             val sql = "SELECT id_jenis FROM jenis WHERE nama_jenis='$jenis' AND ketersediaan='1'"
 
@@ -70,11 +87,9 @@ class Admin(username:String,password:String):Akun(username, password) {
             if (id_jenis != 0) {
                 val sql =
                     "INSERT INTO barang (nama_barang, id_jenis, stok) VALUES ('$nama_barang','$id_jenis','$stok_barang')"
-                val sql2 =
-                    "SELECT id_barang FROM barang WHERE nama_barang='$nama_barang'"
                 stmt?.executeUpdate(sql)
-                rs = stmt?.executeQuery(sql2)
                 log.tambahLog(id_akun,nama_barang,"Tambah barang dengan nama $nama_barang dengan stok $stok_barang")
+                println("Berhasil menambahkan barang ${nama_barang} dengan stok awal ${stok_barang}")
 
             } else {
                 println("Jenis tidak ditemukan")
@@ -87,6 +102,12 @@ class Admin(username:String,password:String):Akun(username, password) {
     fun delBarang() {
         print("Masukkan nama barang : ")
         val nama_barang = readLine()!!
+
+        if (nama_barang.isEmpty()) {
+            println("Data tidak boleh kosong")
+            return
+        }
+
         try {
             val sql = "SELECT id_barang FROM barang WHERE nama_barang='$nama_barang'"
             rs = stmt?.executeQuery(sql)
@@ -110,6 +131,12 @@ class Admin(username:String,password:String):Akun(username, password) {
     fun upBarang() {
         print("Masukkan nama barang : ")
         val nama_barang = readLine()!!
+
+        if (nama_barang.isEmpty()) {
+            println("Data tidak boleh kosong")
+            return
+        }
+
         try {
             val sql = "SELECT id_barang,stok FROM barang WHERE nama_barang='$nama_barang'"
             rs = stmt?.executeQuery(sql)
@@ -129,6 +156,12 @@ class Admin(username:String,password:String):Akun(username, password) {
                     1 -> {
                         print("Masukkan nama baru: ")
                         val nama_baru = readLine()!!
+
+                        if (nama_baru.isEmpty()) {
+                            println("Data tidak boleh kosong")
+                            return
+                        }
+
                         val updateSql = "UPDATE barang SET nama_barang='$nama_baru' WHERE id_barang='$id_barang'"
                         stmt?.executeUpdate(updateSql)
                         log.tambahLog(id_akun,nama_barang,"Update barang dengan nama $nama_barang menjadi $nama_baru")
@@ -139,11 +172,22 @@ class Admin(username:String,password:String):Akun(username, password) {
                     2 -> {
                         print("Masukkan stok baru: ")
                         val stok_baru = readLine()!!
-                        val updateSql = "UPDATE barang SET stok='$stok_baru' WHERE id_barang='$id_barang'"
-                        stmt?.executeUpdate(updateSql)
-                        log.tambahLog(super.id_akun,nama_barang,"Update stok barang dengan nama $nama_barang dari $stok menjadi $stok_baru")
 
-                        println("Stok barang berhasil diupdate")
+                        if (stok_baru.isEmpty()) {
+                            println("Data tidak boleh kosong")
+                            return
+                        }
+
+                        if (stok_baru.toInt() <= 0) {
+                            println("Stok tidak boleh kurang dari/sama dengan 0")
+                            return
+                        }
+
+                        val updateSql = "UPDATE barang SET stok = stok + '$stok_baru' WHERE id_barang='$id_barang'"
+                        stmt?.executeUpdate(updateSql)
+                        log.tambahLog(super.id_akun,nama_barang,"Update stok barang dengan nama $nama_barang dari $stok menjadi $stok_baru", stok_baru.toInt())
+
+                        println("Stok barang berhasil ditambahkan")
                     }
 
                     else -> println("Pilihan tidak valid")
@@ -203,6 +247,11 @@ class Admin(username:String,password:String):Akun(username, password) {
             print("Masukkan nama barang: ")
             val searchName = readLine()!!
 
+            if (searchName.isEmpty()) {
+                println("Data tidak boleh kosong")
+                return
+            }
+
             val sql = "SELECT b.nama_barang, b.stok, j.nama_jenis FROM barang b JOIN jenis j ON b.id_jenis = j.id_jenis WHERE b.nama_barang LIKE '%$searchName%' AND j.ketersediaan = 1"
             rs = stmt?.executeQuery(sql)
 
@@ -233,6 +282,11 @@ class Admin(username:String,password:String):Akun(username, password) {
         try {
             print("Masukkan jenis barang: ")
             val searchJenis = readLine()!!
+
+            if (searchJenis.isEmpty()) {
+                println("Data tidak boleh kosong")
+                return
+            }
 
             val sql = "SELECT b.nama_barang, b.stok, j.nama_jenis FROM barang b JOIN jenis j ON b.id_jenis = j.id_jenis WHERE j.nama_jenis LIKE '%$searchJenis%' AND j.ketersediaan = 1"
             rs = stmt?.executeQuery(sql)

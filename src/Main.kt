@@ -147,7 +147,10 @@ fun showAdminMenu(admin: Admin) {
                 println("\n=== MENU LOG ===")
                 println("1. Lihat Semua Log")
                 println("2. Cari Log berdasarkan Username")
-                println("3. Kembali")
+                println("3. Barang sering keluar")
+                println("4. Barang terlaris")
+                println("5. User teraktif")
+                println("6. Kembali")
                 print("Pilih menu (1-3): ")
 
                 when (readLine()) {
@@ -157,7 +160,10 @@ fun showAdminMenu(admin: Admin) {
                         val username = readLine()!!
                         log.cariLogByUsername(username)
                     }
-                    "3" -> continue
+                    "3" -> log.barangPopuler()
+                    "4" -> log.barangTerlaku()
+                    "5" -> log.userTeraktif()
+                    "6" -> continue
                     else -> println("Menu tidak valid!")
                 }
             }
