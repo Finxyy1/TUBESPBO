@@ -9,7 +9,7 @@ class User(username:String,password:String):Akun(username, password) {
         }
 
         try {
-            val sql = "SELECT id_barang,stok FROM barang WHERE nama_barang='$nama_barang'"
+            val sql = "SELECT id_barang,stok FROM barang WHERE nama_barang='$nama_barang' AND ketersediaan='1'"
             rs = stmt?.executeQuery(sql)
             var id_barang: Int = 0
             var stok:Int = 0
@@ -17,6 +17,12 @@ class User(username:String,password:String):Akun(username, password) {
                 id_barang = rs!!.getInt(1)
                 stok = rs!!.getInt(2)
             }
+
+            if (id_barang == 0) {
+                println("Barang tidak ditemukan")
+                return
+            }
+
             print("Jumlah barang yang ingin diambil: ")
             val stok_baru = scanner.nextInt()
 
@@ -43,7 +49,7 @@ class User(username:String,password:String):Akun(username, password) {
 
     fun lihatBarang() {
         try {
-            val sql = "SELECT b.nama_barang, b.stok, j.nama_jenis FROM barang b JOIN jenis j ON b.id_jenis = j.id_jenis WHERE j.ketersediaan = 1"
+            val sql = "SELECT b.nama_barang, b.stok, j.nama_jenis FROM barang b JOIN jenis j ON b.id_jenis = j.id_jenis WHERE j.ketersediaan = 1 AND b.ketersediaan = 1"
             rs = stmt?.executeQuery(sql)
 
             println("\n=== DAFTAR BARANG ===")
@@ -96,7 +102,7 @@ class User(username:String,password:String):Akun(username, password) {
             }
 
 
-            val sql = "SELECT b.nama_barang, b.stok, j.nama_jenis FROM barang b JOIN jenis j ON b.id_jenis = j.id_jenis WHERE b.nama_barang LIKE '%$searchName%' AND j.ketersediaan = 1"
+            val sql = "SELECT b.nama_barang, b.stok, j.nama_jenis FROM barang b JOIN jenis j ON b.id_jenis = j.id_jenis WHERE b.nama_barang LIKE '%$searchName%' AND j.ketersediaan = 1 AND b.ketersediaan = 1"
             rs = stmt?.executeQuery(sql)
 
             println("\n=== HASIL PENCARIAN BARANG ===")

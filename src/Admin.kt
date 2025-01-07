@@ -77,22 +77,43 @@ class Admin(username:String,password:String):Akun(username, password) {
             return
         }
         try {
-            val sql = "SELECT id_jenis FROM jenis WHERE nama_jenis='$jenis' AND ketersediaan='1'"
+            val sql = "SELECT id_jenis, ketersediaan FROM jenis WHERE nama_jenis='$jenis' AND ketersediaan='1'"
 
             rs = stmt?.executeQuery(sql)
             var id_jenis: Int = 0
             while (rs!!.next()) {
                 id_jenis = rs!!.getInt(1)
             }
-            if (id_jenis != 0) {
+
+            val sql2 = "SELECT id_barang, ketersediaan FROM barang WHERE nama_barang='$nama_barang'"
+            rs = stmt?.executeQuery(sql2)
+            var id_barang = 0
+            var ketersediaan = 0
+
+            while (rs!!.next()) {
+                id_barang = rs!!.getInt(1)
+                ketersediaan = rs!!.getInt(2)
+            }
+
+            if (id_jenis == 0) {
+                println("Jenis tidak ditemukan")
+                return
+            }
+
+            if (id_barang == 0) {
                 val sql =
                     "INSERT INTO barang (nama_barang, id_jenis, stok) VALUES ('$nama_barang','$id_jenis','$stok_barang')"
                 stmt?.executeUpdate(sql)
-                log.tambahLog(id_akun,nama_barang,"Tambah barang dengan nama $nama_barang dengan stok $stok_barang")
+                log.tambahLog(id_akun, nama_barang, "Tambah barang dengan nama $nama_barang dengan stok $stok_barang")
                 println("Berhasil menambahkan barang ${nama_barang} dengan stok awal ${stok_barang}")
-
+            } else if (id_barang != 0 && ketersediaan == 0) {
+                val sql =
+                    "UPDATE barang SET stok = stok + '$stok_barang', ketersediaan = '1' WHERE id_barang='$id_barang'"
+                stmt?.executeUpdate(sql)
+                log.tambahLog(id_akun, nama_barang, "Tambah barang dengan nama $nama_barang dengan stok $stok_barang", stok_barang.toInt())
+                println("Berhasil memulihkan barang ${nama_barang} dengan stok awal ${stok_barang}")
             } else {
-                println("Jenis tidak ditemukan")
+                println("Barang sudah ada")
             }
         } catch (e: Exception) {
             println(e.printStackTrace())
@@ -109,14 +130,14 @@ class Admin(username:String,password:String):Akun(username, password) {
         }
 
         try {
-            val sql = "SELECT id_barang FROM barang WHERE nama_barang='$nama_barang'"
+            val sql = "SELECT id_barang FROM barang WHERE nama_barang='$nama_barang' AND ketersediaan = 1"
             rs = stmt?.executeQuery(sql)
             var id_barang: Int = 0
             while (rs!!.next()) {
                 id_barang = rs!!.getInt(1)
             }
             if (id_barang != 0) {
-                val sql = "DELETE FROM barang WHERE id_barang='$id_barang'"
+                val sql = "UPDATE barang SET ketersediaan = '0' WHERE id_barang='$id_barang'"
                 stmt?.executeUpdate(sql)
                 log.tambahLog(id_akun,nama_barang,"Hapus barang dengan nama $nama_barang")
                 println("Barang berhasil dihapus")
@@ -138,7 +159,7 @@ class Admin(username:String,password:String):Akun(username, password) {
         }
 
         try {
-            val sql = "SELECT id_barang,stok FROM barang WHERE nama_barang='$nama_barang'"
+            val sql = "SELECT id_barang,stok FROM barang WHERE nama_barang='$nama_barang' AND ketersediaan = 1"
             rs = stmt?.executeQuery(sql)
             var id_barang: Int = 0
             var stok: Int = 0
@@ -202,7 +223,7 @@ class Admin(username:String,password:String):Akun(username, password) {
 
     fun lihatBarang() {
         try {
-            val sql = "SELECT b.nama_barang, b.stok, j.nama_jenis FROM barang b JOIN jenis j ON b.id_jenis = j.id_jenis WHERE j.ketersediaan = 1"
+            val sql = "SELECT b.nama_barang, b.stok, j.nama_jenis FROM barang b JOIN jenis j ON b.id_jenis = j.id_jenis WHERE j.ketersediaan = 1 AND b.ketersediaan = 1"
             rs = stmt?.executeQuery(sql)
 
             println("\n=== DAFTAR BARANG ===")
@@ -252,7 +273,7 @@ class Admin(username:String,password:String):Akun(username, password) {
                 return
             }
 
-            val sql = "SELECT b.nama_barang, b.stok, j.nama_jenis FROM barang b JOIN jenis j ON b.id_jenis = j.id_jenis WHERE b.nama_barang LIKE '%$searchName%' AND j.ketersediaan = 1"
+            val sql = "SELECT b.nama_barang, b.stok, j.nama_jenis FROM barang b JOIN jenis j ON b.id_jenis = j.id_jenis WHERE b.nama_barang LIKE '%$searchName%' AND j.ketersediaan = 1 AND b.ketersediaan = 1"
             rs = stmt?.executeQuery(sql)
 
             println("\n=== HASIL PENCARIAN BARANG ===")
