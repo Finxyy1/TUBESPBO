@@ -77,7 +77,7 @@ class Admin(username:String,password:String):Akun(username, password) {
         print("Jenis barang : ")
         val jenis = readLine()!!
 
-        if (nama_barang.isEmpty() && stok_barang.isEmpty() && jenis.isEmpty()) {
+        if (nama_barang.isEmpty() || stok_barang.isEmpty() || jenis.isEmpty()) {
             println("Data tidak boleh kosong")
             return
         }
@@ -207,7 +207,7 @@ class Admin(username:String,password:String):Akun(username, password) {
                     }
 
                     2 -> {
-                        print("Masukkan stok baru: ")
+                        print("Masukkan stok baru masuk: ")
                         val stok_baru = readLine()!!
 
                         if (stok_baru.isEmpty()) {

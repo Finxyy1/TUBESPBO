@@ -39,7 +39,7 @@ class User(username:String,password:String):Akun(username, password) {
                 stmt?.executeUpdate(updateSql)
                 log.tambahLog(id_akun, id_barang,"Mengambil barang dengan nama $nama_barang sebanyak $stok_baru, sisa stok ${stok - stok_baru}", stok_baru)
 
-                println("Stok barang berhasil diambil sebanyak ${stok - stok_baru}")
+                println("Stok barang berhasil diambil sebanyak $stok_baru")
             }else if(stok_baru <= 0){
                 println("Stok tidak boleh kurang dari 0")
             }
