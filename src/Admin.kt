@@ -109,13 +109,20 @@ class Admin(username:String,password:String):Akun(username, password) {
                 val sql =
                     "INSERT INTO barang (nama_barang, id_jenis, stok) VALUES ('$nama_barang','$id_jenis','$stok_barang')"
                 stmt?.executeUpdate(sql)
-                log.tambahLog(id_akun, nama_barang, "Tambah barang dengan nama $nama_barang dengan stok $stok_barang")
+
+                val id = "SELECT id_barang FROM barang WHERE nama_barang='$nama_barang'"
+                rs = stmt?.executeQuery(id)
+                while (rs!!.next()) {
+                    id_barang = rs!!.getInt(1)
+                }
+
+                log.tambahLog(id_akun, id_barang, "Tambah barang dengan nama $nama_barang dengan stok $stok_barang")
                 println("Berhasil menambahkan barang ${nama_barang} dengan stok awal ${stok_barang}")
             } else if (id_barang != 0 && ketersediaan == 0) {
                 val sql =
                     "UPDATE barang SET stok = stok + '$stok_barang', ketersediaan = '1' WHERE id_barang='$id_barang'"
                 stmt?.executeUpdate(sql)
-                log.tambahLog(id_akun, nama_barang, "Tambah barang dengan nama $nama_barang dengan stok $stok_barang", stok_barang.toInt())
+                log.tambahLog(id_akun, id_barang, "Tambah barang dengan nama $nama_barang dengan stok $stok_barang", stok_barang.toInt())
                 println("Berhasil memulihkan barang ${nama_barang} dengan stok awal ${stok_barang}")
             } else {
                 println("Barang sudah ada")
@@ -146,7 +153,7 @@ class Admin(username:String,password:String):Akun(username, password) {
             if (id_barang != 0) {
                 val sql = "UPDATE barang SET ketersediaan = '0' WHERE id_barang='$id_barang'"
                 stmt?.executeUpdate(sql)
-                log.tambahLog(id_akun,nama_barang,"Hapus barang dengan nama $nama_barang")
+                log.tambahLog(id_akun, id_barang,"Hapus barang dengan nama $nama_barang")
                 println("Barang berhasil dihapus")
             } else {
                 println("Barang tidak ditemukan")
@@ -194,7 +201,7 @@ class Admin(username:String,password:String):Akun(username, password) {
 
                         val updateSql = "UPDATE barang SET nama_barang='$nama_baru' WHERE id_barang='$id_barang'"
                         stmt?.executeUpdate(updateSql)
-                        log.tambahLog(id_akun,nama_barang,"Update barang dengan nama $nama_barang menjadi $nama_baru")
+                        log.tambahLog(id_akun, id_barang,"Update barang dengan nama $nama_barang menjadi $nama_baru")
 
                         println("Nama barang berhasil diupdate")
                     }
@@ -215,7 +222,7 @@ class Admin(username:String,password:String):Akun(username, password) {
 
                         val updateSql = "UPDATE barang SET stok = stok + '$stok_baru' WHERE id_barang='$id_barang'"
                         stmt?.executeUpdate(updateSql)
-                        log.tambahLog(super.id_akun,nama_barang,"Update stok barang dengan nama $nama_barang dari $stok menjadi $stok_baru", stok_baru.toInt())
+                        log.tambahLog(super.id_akun, id_barang,"Update stok barang dengan nama $nama_barang dari $stok menjadi ${stok + stok_baru.toInt()}", stok_baru.toInt())
 
                         println("Stok barang berhasil ditambahkan")
                     }

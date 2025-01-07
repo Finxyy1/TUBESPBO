@@ -20,18 +20,18 @@ class log() {
         stmt = conn?.createStatement()
     }
 
-    fun tambahLog(idAkun: Int, namaBarang: String, keterangan: String, jumlah: Int = 0) {
+    fun tambahLog(idAkun: Int, idBarang: Int, keterangan: String, jumlah: Int = 0) {
         val currentDateTime = LocalDateTime.now()
         val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
         val tanggal = currentDateTime.format(formatter)
 
-        val sql = "INSERT INTO log (id_akun, nama_barang, jumlah, keterangan, tanggal) VALUES ('$idAkun', '$namaBarang', '$jumlah', '$keterangan', '$tanggal')"
+        val sql = "INSERT INTO log (id_akun, id_barang, jumlah, keterangan, tanggal) VALUES ('$idAkun', '$idBarang', '$jumlah', '$keterangan', '$tanggal')"
         stmt?.execute(sql)
     }
 
     fun tampilkanLog() {
-        val sql = "SELECT l.*, a.username, nama_barang FROM log l " +
-                "JOIN akun a ON l.id_akun = a.id_akun " +
+        val sql = "SELECT l.*, a.username, l.id_barang, b.nama_barang FROM log l " +
+                "JOIN akun a ON l.id_akun = a.id_akun JOIN barang b ON l.id_barang = b.id_barang " +
                 "ORDER BY l.tanggal DESC"
 
         rs = stmt?.executeQuery(sql)

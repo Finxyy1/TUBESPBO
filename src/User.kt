@@ -37,7 +37,7 @@ class User(username:String,password:String):Akun(username, password) {
             } else if(stok_baru <= stok && stok_baru > 0) {
                 val updateSql = "UPDATE barang SET stok='${stok - stok_baru}' WHERE id_barang='$id_barang'"
                 stmt?.executeUpdate(updateSql)
-                log.tambahLog(id_akun,nama_barang,"Mengambil barang dengan nama $nama_barang sebanyak $stok_baru, sisa stok ${stok - stok_baru}", stok_baru)
+                log.tambahLog(id_akun, id_barang,"Mengambil barang dengan nama $nama_barang sebanyak $stok_baru, sisa stok ${stok - stok_baru}", stok_baru)
 
                 println("Stok barang berhasil diambil sebanyak ${stok - stok_baru}")
             }else if(stok_baru <= 0){
