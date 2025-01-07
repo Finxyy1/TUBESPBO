@@ -51,8 +51,8 @@ class log() {
     }
 
     fun cariLogByID(idAkun: Int) {
-        val sql = "SELECT l.*, a.username, nama_barang FROM log l " +
-                "JOIN akun a ON l.id_akun = a.id_akun " +
+        val sql = "SELECT l.*, a.username, l.id_barang, b.nama_barang FROM log l " +
+                "JOIN akun a ON l.id_akun = a.id_akun JOIN barang b ON l.id_barang = b.id_barang " +
                 "WHERE a.id_akun = '$idAkun' " +
                 "ORDER BY l.tanggal DESC"
 
@@ -72,8 +72,8 @@ class log() {
     }
 
     fun cariLogByUsername(username: String) {
-        val sql = "SELECT l.*, a.username, nama_barang FROM log l " +
-                "JOIN akun a ON l.id_akun = a.id_akun " +
+        val sql = "SELECT l.*, a.username, l.id_barang, b.nama_barang FROM log l " +
+                "JOIN akun a ON l.id_akun = a.id_akun JOIN barang b ON l.id_barang = b.id_barang " +
                 "WHERE a.username = '$username' " +
                 "ORDER BY l.tanggal DESC"
         rs = stmt?.executeQuery(sql)
@@ -89,7 +89,7 @@ class log() {
     }
 
     fun barangPopuler(){
-        val sql = "SELECT nama_barang, COUNT(*) AS jumlah_transaksi FROM log WHERE keterangan LIKE 'Mengambil%' GROUP BY nama_barang ORDER BY jumlah_transaksi DESC LIMIT 3"
+        val sql = "SELECT l.id_barang, b.nama_barang, COUNT(l.id_barang) AS jumlah_transaksi FROM log l JOIN barang b ON l.id_barang=b.id_barang  WHERE keterangan LIKE 'Mengambil%' GROUP BY l.id_barang ORDER BY jumlah_transaksi DESC LIMIT 3"
         rs = stmt?.executeQuery(sql)
         println("\n=== 3 BARANG TERSIBUK ===")
         println("Nama Barang\t\tJumlah Transaksi")
@@ -97,12 +97,12 @@ class log() {
         while (rs?.next() == true) {
             val namaBarang = rs?.getString("nama_barang")
             val jumlahTransaksi = rs?.getInt("jumlah_transaksi")
-            println("$namaBarang\t\t$jumlahTransaksi")
+            println("$namaBarang\t\t\t$jumlahTransaksi")
         }
     }
 
     fun barangTerlaku() {
-        val sql = "SELECT nama_barang, SUM(jumlah) AS total_barang FROM log WHERE keterangan LIKE 'Mengambil%' GROUP BY nama_barang ORDER BY total_barang DESC LIMIT 3"
+        val sql = "SELECT l.id_barang, b.nama_barang, SUM(jumlah) AS total_barang FROM log l JOIN barang b ON l.id_barang=b.id_barang WHERE keterangan LIKE 'Mengambil%' GROUP BY l.id_barang ORDER BY total_barang DESC LIMIT 3"
         rs = stmt?.executeQuery(sql)
         println("\n=== 3 BARANG TERLARIS ===")
         println("Nama Barang\t\tTotal Barang")

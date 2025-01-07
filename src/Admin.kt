@@ -116,7 +116,7 @@ class Admin(username:String,password:String):Akun(username, password) {
                     id_barang = rs!!.getInt(1)
                 }
 
-                log.tambahLog(id_akun, id_barang, "Tambah barang dengan nama $nama_barang dengan stok $stok_barang")
+                log.tambahLog(id_akun, id_barang, "Tambah barang dengan nama $nama_barang dengan stok $stok_barang", stok_barang.toInt())
                 println("Berhasil menambahkan barang ${nama_barang} dengan stok awal ${stok_barang}")
             } else if (id_barang != 0 && ketersediaan == 0) {
                 val sql =
