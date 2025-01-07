@@ -21,8 +21,10 @@ class Admin(username:String,password:String):Akun(username, password) {
             if (jmlh == 0) {
                 val sql = "INSERT INTO jenis (nama_jenis) VALUES ('$nama_jenis')"
                 stmt?.executeUpdate(sql)
+                println("Jenis ditambahkan")
             } else if (jmlh == 1 && ketersediaan == 0) {
                 val sql = "UPDATE jenis SET ketersediaan=1 WHERE nama_jenis='$nama_jenis'"
+                println("Jenis dipulihkan")
                 stmt?.executeUpdate(sql)
             } else {
                 println("Jenis sudah ada")
@@ -35,6 +37,7 @@ class Admin(username:String,password:String):Akun(username, password) {
 
     fun delJenis() {
         try {
+            this.lihatJenis()
             print("Masukkan nama jenis : ")
             val nama_jenis = readLine()!!
 
@@ -69,6 +72,8 @@ class Admin(username:String,password:String):Akun(username, password) {
         val nama_barang = readLine()!!
         print("Stok barang : ")
         val stok_barang = readLine()!!
+
+        this.lihatJenis()
         print("Jenis barang : ")
         val jenis = readLine()!!
 
@@ -121,6 +126,8 @@ class Admin(username:String,password:String):Akun(username, password) {
     }
 
     fun delBarang() {
+        this.lihatBarang()
+
         print("Masukkan nama barang : ")
         val nama_barang = readLine()!!
 
@@ -150,6 +157,8 @@ class Admin(username:String,password:String):Akun(username, password) {
     }
 
     fun upBarang() {
+        this.lihatBarang()
+
         print("Masukkan nama barang : ")
         val nama_barang = readLine()!!
 
@@ -226,6 +235,7 @@ class Admin(username:String,password:String):Akun(username, password) {
             val sql = "SELECT b.nama_barang, b.stok, j.nama_jenis FROM barang b JOIN jenis j ON b.id_jenis = j.id_jenis WHERE j.ketersediaan = 1 AND b.ketersediaan = 1"
             rs = stmt?.executeQuery(sql)
 
+            println()
             println("\n=== DAFTAR BARANG ===")
             println("Nama Barang\t\tStok\t\tJenis")
             println("----------------------------------------")
@@ -237,6 +247,7 @@ class Admin(username:String,password:String):Akun(username, password) {
                 println("$namaBarang\t\t\t$stok\t\t\t$jenisBarang")
             }
             println("----------------------------------------")
+            println()
 
         } catch (e: Exception) {
             println(e.printStackTrace())
@@ -247,7 +258,7 @@ class Admin(username:String,password:String):Akun(username, password) {
         try {
             val sql = "SELECT nama_jenis FROM jenis WHERE ketersediaan = 1"
             rs = stmt?.executeQuery(sql)
-
+            println()
             println("\n=== DAFTAR JENIS BARANG ===")
             println("Nama Jenis")
             println("--------------------")
@@ -257,6 +268,7 @@ class Admin(username:String,password:String):Akun(username, password) {
                 println(namaJenis)
             }
             println("--------------------")
+            println()
 
         } catch (e: Exception) {
             println(e.printStackTrace())

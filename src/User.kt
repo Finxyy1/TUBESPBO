@@ -1,5 +1,6 @@
 class User(username:String,password:String):Akun(username, password) {
     fun ambilBarang() {
+        this.lihatBarang()
         print("Masukkan nama barang : ")
         val nama_barang = readLine()!!
 
@@ -52,6 +53,7 @@ class User(username:String,password:String):Akun(username, password) {
             val sql = "SELECT b.nama_barang, b.stok, j.nama_jenis FROM barang b JOIN jenis j ON b.id_jenis = j.id_jenis WHERE j.ketersediaan = 1 AND b.ketersediaan = 1"
             rs = stmt?.executeQuery(sql)
 
+            println()
             println("\n=== DAFTAR BARANG ===")
             println("Nama Barang\t\t\tStok\t\t\tJenis")
             println("----------------------------------------------------")
@@ -63,6 +65,7 @@ class User(username:String,password:String):Akun(username, password) {
                 println("$namaBarang\t\t\t\t$stok\t\t\t\t$jenisBarang")
             }
             println("----------------------------------------------------")
+            println()
 
         } catch (e: Exception) {
             println(e.printStackTrace())
@@ -75,6 +78,7 @@ class User(username:String,password:String):Akun(username, password) {
             val sql = "SELECT nama_jenis FROM jenis WHERE ketersediaan = 1"
             rs = stmt?.executeQuery(sql)
 
+            println()
             println("\n=== DAFTAR JENIS BARANG ===")
             println("Nama Jenis")
             println("--------------------")
@@ -84,6 +88,7 @@ class User(username:String,password:String):Akun(username, password) {
                 println(namaJenis)
             }
             println("--------------------")
+            println()
 
         } catch (e: Exception) {
             println(e.printStackTrace())
